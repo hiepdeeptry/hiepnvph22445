@@ -1,0 +1,14 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "userName": "hiepnvph22445",
+            "password": "jqka",
+            "firtName": "Hiệp",
+            "lastName": "Nguyễn Văn",
+            "email": "hiepnvph22445#fpt.edu.vn",
+            "gender": "Male"
+
+        }
+    ]
+}
