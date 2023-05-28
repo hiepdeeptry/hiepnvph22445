@@ -9,6 +9,16 @@
             "email": "hiepnvph22445#fpt.edu.vn",
             "gender": "Male"
 
+        },
+        {
+            "id": 2,
+            "userName": "nvanhiep203",
+            "password": "1234",
+            "firtName": "Hiệp",
+            "lastName": "Nguyễn Văn",
+            "email": "nvanhiep203@gmail.com",
+            "gender": "Male"
+
         }
     ]
 }
