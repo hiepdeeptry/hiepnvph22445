@@ -8,65 +8,98 @@
 // B3 khai báo component (tên màn muốn import)
 // B4 ẩn dùng thuộc tính options headerShown
 import { Button, Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import CustomButton from '../components/CustomButton';
 import Logo from '../assets/images/logo.png'
+import CustomStudent from '../components/CustomStudent';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 
+const HomeScreen = () => {
 
-const HomeScreen = ({ navigation }) => {
+  const navigation = useNavigation()
+  const [listStudents, setListStudents] = useState([]);
+  const [authInfo, setAuthInfo] = useState();
 
-  const [listUsers, setListUsers] = useState([]);
 
-  async function fetchData() {
+  // Hàm điều hướng
+  const navigateToLogin = () => {
+    navigation.navigate('Login');
+  }
+
+  //  
+  const retrieveData = async () => {
     try {
-      const response = await fetch('http://192.168.2.104:3000/users');
+      const authInfo = await AsyncStorage.getItem('authInfo');
+      if (authInfo !== null) {
+        console.log('====> authInfo from AsyncStorage', authInfo);
+        setAuthInfo(JSON.parse(authInfo));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //Logout
+  const doLogout = () => {
+    AsyncStorage.removeItem('authInfo');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }]
+    });
+  };
+
+
+  // Function lấy dữ liệu từ API sử dụng fetch
+  async function getStudents() {
+    try {
+      const response = await fetch('http://192.168.2.104:3000/students');
       const data = await response.json();
-      return data;
+      setListStudents(data);
     } catch (error) {
       console.log('Lỗi lấy dữ liệu! ' + error);
       return null;
     }
   }
 
-  async function getData() {
-    setListUsers(await fetchData());
-  }
+  //Tìm nạp data
+  useEffect(() => {
+    retrieveData();
+    getStudents();
 
-  getData();
+  }, [])
 
-  const navigateToLogin = () => {
-    navigation.navigate('Login');
-  }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <CustomButton title={"Go to Login Screen"} onPress={navigateToLogin} />
-        <Text style={styles.txtHome}>Home</Text>
-      </View>
+  const renderStudents = () => {
+    return (
       <ScrollView contentContainerStyle={{
         padding: 20,
         backgroundColor: 'white',
       }}>
         <View >
-          {listUsers.map((item, index) => {
+          {listStudents.map((item, index) => {
             return (
-              <View style={styles.itemList} key={index}>
-                <View >
-                  <Image style={styles.icon} source={Logo}></Image>
-                </View>
-                <View style={{justifyContent:'center'}}>
-                  <Text style = {{fontWeight:'bold' , fontSize:20}}>{item.lastName + " " + item.firtName} </Text>
-                  <Text>{item.gender} </Text>
-                  <Text>{item.email} </Text>
-                </View>
+              <View key={index}>
+                <CustomStudent
+                  student={item} />
+
               </View>
             )
           })}
         </View>
       </ScrollView>
+    )
+
+  }
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View>
+        {authInfo ? <CustomButton onPress={doLogout} title={"Logout"} /> : <CustomButton onPress={navigateToLogin} title={"Go to login screen"} />}
+        <Text style={styles.txtHome}>Home</Text>
+        {authInfo?.role === 'ADMIN' ? renderStudents() : null}
+      </View>
     </SafeAreaView>
   )
 }
@@ -78,10 +111,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#e1e1e1'
   },
 
-  listContainer :{
-    flexDirection:'row',
-    marginBottom:20
-    
+  listContainer: {
+    flexDirection: 'row',
+    marginBottom: 20
+
   },
 
 
@@ -94,20 +127,22 @@ const styles = StyleSheet.create({
 
   },
 
-  itemList: {
-    paddingVertical: 15,
-    borderBottomColor: '#e2e2e2',
-    borderBottomWidth: 0.5,
-    flexDirection:'row',
-  },
 
-  icon:{
-    width:100,
-    height:100,
-    borderRadius:100,
-    backgroundColor:'#e6e6e6',
-    marginRight:20
-  }
+
+
 
 })
 
+
+/*
+ component lifecycle  vòng đời của một component
+ 3 trạng thái
+ mounting :khi component được gọi thì chạy mounting đầu tiêu ||  khởi tạo trạng thái ban đầu của component
+      DOM là các thẻ
+      contractor : định nghĩa thuộc tính || cấu trúc của component;
+      componentDidmount : gọi ngay sau quá trình đầu tiên xảy ra khi class đc gọi đến
+  unmounting : chỉ chạy khi gọi componentwillUnmount
+
+*/
+
+//useEffect chạy một lần khi mounting
