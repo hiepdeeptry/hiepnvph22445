@@ -1,176 +1,50 @@
-{   
-    "users":[
-        {
-            "id": 0,
-            "username": "hiepnvph22445",
-            "password": "jqka",
-            "firtName": "Hiệp",
-            "lastName": "Nguyễn Văn",
-            "email": "hiepnvph22445@fpt.edu.vn",
-            "gender": "Male",
-            "birthDay" : "28/10/2003",
-            "role":"ADMIN"
-            
-        },
-        {
-            "id": 0,
-            "username": "nvanhiep203",
-            "password": "1234",
-            "firtName": "Mẹt",
-            "lastName": "Lò Văn",
-            "email": "lovanmet@gmail.com",
-            "gender": "Male",
-            "birthDay" : "28/10/2003",
-            "role":"STAFF"
-            
-        }
-    ],
-
-    "students": [
-        {
-            "id": 0,
-            "studentID" : "PH22445",
-            "userName": "hiepnvph22445",
-            "password": "jqka",
-            "firtName": "Hiệp",
-            "lastName": "Nguyễn Văn",
-            "email": "hiepnvph22445@fpt.edu.vn",
-            "gender": "Male",
-            "birthDay" : "28/10/2003"
-            
-
-        },
-        {
-            "id": 1,
-            "studentID" : "PH22445",
-            "userName": "nvanhiep203",
-            "password": "1234",
-            "firtName": "Hiệp",
-            "lastName": "Nguyễn Văn",
-            "email": "nvanhiep203@gmail.com",
-            "gender": "Male",
-            "birthDay" : "28/10/2003"
-
-        },
-        {
-            "id": 2,
-            "studentID" : "PH22445",
-            "userName": "lovanmet",
-            "password": "1234",
-            "firtName": "Mẹt",
-            "lastName": "Lò Văn",
-            "email": "lovanmet@gmail.com",
-            "gender": "Female",
-            "birthDay" : "28/10/2003"
-
-        },
-        {
-            "id": 4,
-            "studentID" : "PH22445",
-            "userName": "hiepnvph22445",
-            "password": "jqka",
-            "firtName": "Hiệp",
-            "lastName": "Nguyễn Văn",
-            "email": "hiepnvph22445@fpt.edu.vn",
-            "gender": "Female",
-            "birthDay" : "28/10/2003"
-
-        },
-        {
-            "id": 5,
-            "studentID" : "PH22445",
-            "userName": "nvanhiep203",
-            "password": "1234",
-            "firtName": "Hiệp",
-            "lastName": "Nguyễn Văn",
-            "email": "nvanhiep203@gmail.com",
-            "gender": "Female",
-            "birthDay" : "28/10/2003"
-
-        },
-        {
-            "id": 6,
-            "studentID" : "PH22445",
-            "userName": "lovanmet",
-            "password": "1234",
-            "firtName": "Mẹt",
-            "lastName": "Lò Văn",
-            "email": "lovanmet@gmail.com",
-            "gender": "Male",
-            "birthDay" : "28/10/2003"
-
-        },
-        {
-            "id": 7,
-            "studentID" : "PH22445",
-            "userName": "hiepnvph22445",
-            "password": "jqka",
-            "firtName": "Hiệp",
-            "lastName": "Nguyễn Văn",
-            "email": "hiepnvph22445@fpt.edu.vn",
-            "gender": "Male",
-            "birthDay" : "28/10/2003"
-
-        },
-        {
-            "id": 8,
-            "studentID" : "PH22445",
-            "userName": "nvanhiep203",
-            "password": "1234",
-            "firtName": "Hiệp",
-            "lastName": "Nguyễn Văn",
-            "email": "nvanhiep203@gmail.com",
-            "gender": "Male",
-            "birthDay" : "28/10/2003"
-
-        },
-        {
-            "id": 9,
-            "studentID" : "PH22445",
-            "userName": "lovanmet",
-            "password": "1234",
-            "firtName": "Mẹt",
-            "lastName": "Lò Văn",
-            "email": "lovanmet@gmail.com",
-            "gender": "Male",
-            "birthDay" : "28/10/2003"
-
-        },
-        {
-            "id": 10,
-            "studentID" : "PH22445",
-            "userName": "hiepnvph22445",
-            "password": "jqka",
-            "firtName": "Hiệp",
-            "lastName": "Nguyễn Văn",
-            "email": "hiepnvph22445@fpt.edu.vn",
-            "gender": "Male",
-            "birthDay" : "28/10/2003"
-
-        },
-        {
-            "id": 11,
-            "studentID" : "PH22445",
-            "userName": "nvanhiep203",
-            "password": "1234",
-            "firtName": "Hiệp",
-            "lastName": "Nguyễn Văn",
-            "email": "nvanhiep203@gmail.com",
-            "gender": "Male",
-            "birthDay" : "28/10/2003"
-
-        },
-        {
-            "id": 12,
-            "studentID" : "PH22445",
-            "userName": "lovanmet",
-            "password": "1234",
-            "firtName": "Mẹt",
-            "lastName": "Lò Văn",
-            "email": "lovanmet@gmail.com",
-            "gender": "Female",
-            "birthDay" : "28/10/2003"
-
-        }
-    ]
+{
+  "users": [
+    {
+      "id": 0,
+      "username": "a",
+      "password": "a",
+      "firtName": "Hiệp",
+      "lastName": "Nguyễn Văn",
+      "email": "hiepnvph22445@fpt.edu.vn",
+      "gender": "Male",
+      "birthDay": "28/10/2003",
+      "role": "ADMIN"
+    },
+    {
+      "id": 1,
+      "username": "nvanhiep203",
+      "password": "1234",
+      "firtName": "Lo",
+      "lastName": "Van Met",
+      "email": "lovanmet203@gmail.com",
+      "gender": "Nam",
+      "birthDay": "28/10/2003",
+      "role": "STAFF"
+    }
+  ],
+  "students": [
+    {
+      "id": 18,
+      "username": "nvanhiep203",
+      "password": "1234",
+      "firtName": "Lo",
+      "lastName": "Van Met",
+      "email": "lovanmet203@gmail.com",
+      "gender": "Male",
+      "birthDay": "28/10/2003",
+      "role": "STAFF"
+    },
+    {
+      "id": 19,
+      "username": "a",
+      "password": "a",
+      "firtName": "Hiệp",
+      "lastName": "Nguyễn Văn",
+      "email": "hiepnvph22445@fpt.edu.vn",
+      "gender": "Male",
+      "birthDay": "28/10/2003",
+      "role": "ADMIN"
+    }
+  ]
 }

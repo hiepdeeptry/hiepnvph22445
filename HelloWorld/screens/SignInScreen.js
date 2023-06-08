@@ -42,11 +42,11 @@ const SignInScreen = () => {
     // Kiểm tra dữ liệu trên form gồm username và password
 
     if (authInfo.username === '') {
-      setUsernameError('Username field cannot be empty');
+      setUsernameError('Username Không được để trống');
       return false;
     } else if (authInfo.password === '') {
       setUsernameError('');
-      setPasswordError('Password field cannot be empty');
+      setPasswordError('Password không được để trống');
       return false;
     }
     return true;
@@ -82,7 +82,7 @@ const SignInScreen = () => {
 
       if (validateResult === true) {
         const authInfo = users.find((user) => request.username === user.username);
-        if (!authInfo) {
+        if (!authInfo) {  
           clearError(usernameError, passwordError);
           setUsernameError("Không tìm thấy tài khoản!")
         } else {
