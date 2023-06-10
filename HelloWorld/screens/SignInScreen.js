@@ -27,7 +27,7 @@ const SignInScreen = () => {
   // Function lấy dữ liệu từ API sử dụng fetch
   async function getUsers() {
     try {
-      const response = await fetch('http://192.168.2.104:3000/users');
+      const response = await fetch('http://172.20.10.2:3000/users');
       const data = await response.json();
       //Gán dữ liệu cho users
       setUsers(data)

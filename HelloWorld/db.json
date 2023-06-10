@@ -26,25 +26,19 @@
   "students": [
     {
       "id": 18,
-      "username": "nvanhiep203",
-      "password": "1234",
-      "firtName": "Lo",
-      "lastName": "Van Met",
+      "studentID": "PH111111",
+      "studentName": "1111111",
       "email": "lovanmet203@gmail.com",
-      "gender": "Male",
-      "birthDay": "28/10/2003",
-      "role": "STAFF"
+      "gender": "Nữ",
+      "birthDay": "28/10/2003"
     },
     {
       "id": 19,
-      "username": "a",
-      "password": "a",
-      "firtName": "Hiệp",
-      "lastName": "Nguyễn Văn",
+      "studentID": "PH22222",
+      "studentName": "222222",
       "email": "hiepnvph22445@fpt.edu.vn",
-      "gender": "Male",
-      "birthDay": "28/10/2003",
-      "role": "ADMIN"
+      "gender": "Nam",
+      "birthDay": "28/10/2003"
     }
   ]
 }

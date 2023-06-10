@@ -55,6 +55,8 @@ const HomeScreen = () => {
 
 
 
+
+
   // Hàm điều hướng
   const navigateToLogin = () => {
     navigation.navigate('Login');
@@ -93,18 +95,18 @@ const HomeScreen = () => {
   // Function lấy dữ liệu từ API sử dụng fetch
   async function getStudents() {
     try {
-      const response = await fetch('http://192.168.2.104:3000/students');
+      const response = await fetch('http://172.20.10.2:3000/students');
       const data = await response.json();
-      setListStudents(data);
+      await setListStudents(data);
     } catch (error) {
       console.log('Lỗi lấy dữ liệu! ' + error);
       return null;
     }
   }
-  // Function update theo id
+  // Function update user theo id
 
-  const update = (id) => {
-    fetch('http://192.168.2.104:3000/users/' + id, {
+  const updateUser = (id) => {
+    fetch('http://172.20.10.2:3000/users/' + id, {
       method: 'PATCH',
       body: JSON.stringify({ firtName: firtName, lastName: lastName, email: email, gender: gender, birthDay: birthDay }),
       headers: {
@@ -115,17 +117,18 @@ const HomeScreen = () => {
       .then((json) => console.log(json));
   }
 
+
   // Xoá dữ liệu
   const deleteStudent = async (item) => {
     try {
       const studentId = item.id;
-      const API_URL = 'http://192.168.2.104:3000/students/' + studentId;
+      const API_URL = 'http://172.20.10.2:3000/students/' + studentId;
       const response = await fetch(API_URL, { method: 'DELETE' });
       if (response && response.status === 200) {
         getStudents();
       }
     } catch (error) {
-      log.error('Delete data failed ' + error);
+      console.log('Delete data failed ' + error);
     }
   };
 
@@ -169,7 +172,7 @@ const HomeScreen = () => {
     const validateResult = validateUpdate(request);
     if (validateResult) {
       try {
-        update(id)
+        updateUser(id)
         ToastAndroid.show("Update thành công!", ToastAndroid.SHORT);
       } catch (error) {
 
@@ -187,11 +190,12 @@ const HomeScreen = () => {
             return (
               <View key={index}>
                 <CustomStudent
-                  student={item} onDelete={deleteStudent} />
-
+                  student={item} onRefresh={getStudents} onDelete={deleteStudent} />
               </View>
+
             )
           })}
+          
         </View>
       </ScrollView>
     )
