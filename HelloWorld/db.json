@@ -13,8 +13,8 @@
     },
     {
       "id": 1,
-      "username": "nvanhiep203",
-      "password": "1234",
+      "username": "b",
+      "password": "b",
       "firtName": "Lo",
       "lastName": "Van Met",
       "email": "lovanmet203@gmail.com",
@@ -25,20 +25,31 @@
   ],
   "students": [
     {
-      "id": 18,
-      "studentID": "PH111111",
-      "studentName": "1111111",
-      "email": "lovanmet203@gmail.com",
-      "gender": "Nữ",
-      "birthDay": "28/10/2003"
+      "avatar": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252FHelloWorld-8d52b244-1193-4a59-8288-d5145444f5e3/ImagePicker/b5565675-be94-4386-943e-4df359c3d20b.jpeg",
+      "studentID": "PH1111",
+      "studentName": "Lo Van Met",
+      "email": "lovanmet@gmail.com",
+      "gender": "Nam",
+      "birthDay": "22/6/2023",
+      "id": 1
     },
     {
-      "id": 19,
-      "studentID": "PH22222",
-      "studentName": "222222",
-      "email": "hiepnvph22445@fpt.edu.vn",
+      "avatar": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252FHelloWorld-8d52b244-1193-4a59-8288-d5145444f5e3/ImagePicker/7c35a9d6-5d6b-4a74-b1ed-f7517585d182.jpeg",
+      "studentID": "PH22445",
+      "studentName": "Nguyen Van Hiep",
+      "email": "nvanhiep203@gmail.com",
       "gender": "Nam",
-      "birthDay": "28/10/2003"
+      "birthDay": "19/6/2023",
+      "id": 2
+    },
+    {
+      "avatar": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252FHelloWorld-8d52b244-1193-4a59-8288-d5145444f5e3/ImagePicker/a2b8f43d-2ac9-4017-9ac2-53619aa056c4.jpeg",
+      "studentID": "cac",
+      "studentName": "a",
+      "email": "cc",
+      "gender": "Nữ",
+      "birthDay": "15/6/2023",
+      "id": 3
     }
   ]
 }

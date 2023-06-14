@@ -10,7 +10,7 @@
 // B2 khai báo prop name (duy nhất)
 // B3 khai báo component (tên màn muốn import)
 // B4 ẩn dùng thuộc tính options headerShown
-import { Button, Image, SafeAreaView, Picker, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, View } from 'react-native'
+import { Button, Image, SafeAreaView, Picker, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, View, TouchableOpacity } from 'react-native'
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import CustomButton from '../components/CustomButton';
@@ -20,6 +20,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import CustomInput from '../components/CustomInput';
 import { SelectList } from 'react-native-dropdown-select-list';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+import * as ImagePicker from 'expo-image-picker';
+import User from '../assets/avatar.png'
+
 
 
 const HomeScreen = () => {
@@ -30,10 +34,15 @@ const HomeScreen = () => {
 
   // const [id,setId] = useState();
 
-  const [firtName, setFirtName] = useState('');
-  const [firtNameError, setFirtNameError] = useState('');
+  const [avatar, setAvatar] = useState('');
 
-  const [lastName, setLastName] = useState('');
+  const [studentID, setStudentID] = useState('');
+  const [studentIDError, setStudentIDError] = useState('');
+
+
+  const [studentName, setStudentName] = useState('');
+  const [studentNameError, setStudentNameError] = useState('');
+
 
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -46,6 +55,9 @@ const HomeScreen = () => {
   const [birthDayError, setBirthDayError] = useState('');
 
   const [id, setId] = useState();
+
+  const [open, setOpen] = useState(false)
+
 
 
 
@@ -70,13 +82,6 @@ const HomeScreen = () => {
       if (authInfo !== null) {
         console.log('====> authInfo from AsyncStorage', authInfo);
         setAuthInfo(JSON.parse(authInfo));
-
-        setFirtName(JSON.parse(authInfo).firtName);
-        setLastName(JSON.parse(authInfo).lastName);
-        setEmail(JSON.parse(authInfo).email);
-        setGender(JSON.parse(authInfo).gender);
-        setBirthDay(JSON.parse(authInfo).birthDay);
-
       }
     } catch (error) {
       console.log(error);
@@ -95,7 +100,7 @@ const HomeScreen = () => {
   // Function lấy dữ liệu từ API sử dụng fetch
   async function getStudents() {
     try {
-      const response = await fetch('http://172.20.10.2:3000/students');
+      const response = await fetch('http://192.168.2.104:3000/students');
       const data = await response.json();
       await setListStudents(data);
     } catch (error) {
@@ -105,16 +110,34 @@ const HomeScreen = () => {
   }
   // Function update user theo id
 
-  const updateUser = (id) => {
-    fetch('http://172.20.10.2:3000/users/' + id, {
-      method: 'PATCH',
-      body: JSON.stringify({ firtName: firtName, lastName: lastName, email: email, gender: gender, birthDay: birthDay }),
+  // const updateUser = (id) => {
+  //   fetch('http://192.168.2.104:3000/users/' + id, {
+  //     method: 'PATCH',
+  //     body: JSON.stringify({ firtName: firtName, lastName: lastName, email: email, gender: gender, birthDay: birthDay }),
+  //     headers: {
+  //       'Content-type': 'application/json; charset=UTF-8',
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((json) => console.log(json));
+  // }
+
+  //Save
+  const insert = (students) => {
+    fetch('http://192.168.2.104:3000/students', {
+      method: 'POST',
       headers: {
-        'Content-type': 'application/json; charset=UTF-8',
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-    })
-      .then((response) => response.json())
-      .then((json) => console.log(json));
+      body: JSON.stringify(students),
+    }).then((response) => response.json())
+      .then((responseJson) => {
+        console.log('response object:', responseJson)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
 
@@ -122,7 +145,7 @@ const HomeScreen = () => {
   const deleteStudent = async (item) => {
     try {
       const studentId = item.id;
-      const API_URL = 'http://172.20.10.2:3000/students/' + studentId;
+      const API_URL = 'http://192.168.2.104:3000/students/' + studentId;
       const response = await fetch(API_URL, { method: 'DELETE' });
       if (response && response.status === 200) {
         getStudents();
@@ -141,25 +164,67 @@ const HomeScreen = () => {
   }, [])
 
 
+  const checkRequired = (id) => {
+    for (const student of listStudents) {
+      if (student.studentID === id) {
+        return false
+      }
+    }
+    return true
+
+  }
+
   const validateUpdate = (authInfo) => {
-    if (authInfo.firtName === '' || authInfo.lastName === '') {
-      setFirtNameError('Họ tên không được để trống!')
+    if (authInfo.studentID === '') {
+      setStudentNameError('')
+      setEmailError('')
+      setGenderError('')
+      setBirthDayError('');
+      setStudentIDError('Mã sinh viên không được để trống!')
+      return false
+    } else if (authInfo.studentName === '') {
+      console.log(authInfo.studentID)
+
+      setStudentIDError('');
+      setEmailError('')
+      setGenderError('')
+      setBirthDayError('');
+      setStudentNameError('Họ tên không được để trống!')
       return false;
     } else if (authInfo.email === '') {
-      setFirtNameError('')
+      setStudentIDError('');
+      setStudentNameError('')
+      setGenderError('')
+      setBirthDayError('');
       setEmailError('Mail không được để trống')
       return false;
     } else if (authInfo.gender === '') {
+      setStudentIDError('');
+      setStudentNameError('')
       setEmailError('')
+      setBirthDayError('');
       setGenderError('Giới tính không được để trống')
       return false;
 
     } else if (authInfo.birthDay === '') {
+      setStudentIDError('');
+      setStudentNameError('')
+      setEmailError('')
       setGenderError('')
       setBirthDayError('Ngày sinh không được để trống')
       return false;
     }
-    setFirtNameError('')
+    if (!checkRequired(authInfo.studentID)) {
+      setStudentNameError('')
+      setEmailError('')
+      setGenderError('')
+      setBirthDayError('');
+      setStudentIDError('Mã sinh viên đã tồn tại!')
+      return false
+    }
+
+    setStudentIDError('');
+    setStudentNameError('')
     setEmailError('')
     setGenderError('')
     setBirthDayError('');
@@ -167,18 +232,50 @@ const HomeScreen = () => {
 
   }
 
-  const handUpdate = (id) => {
-    let request = { firtName: firtName, lastName: lastName, email: email, gender: gender, birthDay: birthDay }
+  const handInsert = () => {
+    let request = {avatar:avatar, studentID: studentID, studentName: studentName, email: email, gender: gender, birthDay: birthDay }
     const validateResult = validateUpdate(request);
     if (validateResult) {
       try {
-        updateUser(id)
+        insert(request);
+        getStudents();
         ToastAndroid.show("Update thành công!", ToastAndroid.SHORT);
       } catch (error) {
 
       }
     }
   }
+
+  const handleSelectImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access the media library is required!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setAvatar(result.assets[0].uri);
+    }
+  };
+
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setOpen(false)
+
+    let tempDate = new Date(currentDate);
+    let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+    setBirthDay(fDate);
+
+  }
+
   const renderStudents = () => {
     return (
       <ScrollView contentContainerStyle={{
@@ -195,7 +292,7 @@ const HomeScreen = () => {
 
             )
           })}
-          
+
         </View>
       </ScrollView>
     )
@@ -205,37 +302,41 @@ const HomeScreen = () => {
 
 
 
-  const formStaffs = (authInfo) => {
+  const formStaffs = () => {
 
     return (
       <View style={{ backgroundColor: 'white', padding: 10, justifyContent: 'center' }}>
-        <View style={{
-          flexDirection: 'row',
-          justifyContent: 'center'
-        }}>
-          <TextInput style={{
-            flex: 6,
-            borderWidth: 1,
-            padding: 10,
-            marginRight: 10,
-            borderRadius: 10
-          }} value={firtName} placeholder='Tên' onChangeText={(firtName) => {
-            setFirtName(firtName);
-          }}  ></TextInput>
 
-          <TextInput style={{
-            flex: 6,
-            borderWidth: 1,
-            padding: 10,
-            marginRight: 10,
-            borderRadius: 10
-
-
-          }} value={lastName} placeholder='Họ' onChangeText={(lastName) => {
-            setLastName(lastName);
-          }}></TextInput>
+        <View style={{alignItems:'center'}}>
+          <TouchableOpacity style={styles.imageContainer} onPress={handleSelectImage}>
+            {avatar ? (
+              <Image source={{ uri: avatar }} style={styles.image} />
+            ) : (
+              <Image source={User} style={styles.image} />
+            )}
+          </TouchableOpacity>
         </View>
-        <Text style={styles.errorTxt}>{firtNameError}</Text>
+
+        <TextInput style={{
+          borderWidth: 1,
+          padding: 10,
+          marginRight: 10,
+          borderRadius: 10
+        }} placeholder='Mã sinh viên' onChangeText={(studentID) => {
+          setStudentID(studentID);
+        }}></TextInput>
+
+        <Text style={styles.errorTxt}>{studentIDError}</Text>
+
+        <TextInput style={{
+          borderWidth: 1,
+          padding: 10,
+          marginRight: 10,
+          borderRadius: 10
+        }} placeholder='Họ và tên' onChangeText={(studentName) => {
+          setStudentName(studentName);
+        }}></TextInput>
+        <Text style={styles.errorTxt}>{studentNameError}</Text>
 
 
         <TextInput style={{
@@ -243,7 +344,6 @@ const HomeScreen = () => {
           padding: 10,
           marginRight: 10,
           borderRadius: 10,
-          marginTop: 20
 
         }} value={email} placeholder='Email' onChangeText={(email) => {
           setEmail(email);
@@ -251,8 +351,8 @@ const HomeScreen = () => {
         <Text style={styles.errorTxt}>{emailError}</Text>
 
         <SelectList
+          boxStyles={{ marginRight: 10 }}
           dropdownStyles={{
-            padding: 10,
             marginRight: 10,
             borderRadius: 10,
             marginTop: 20
@@ -262,36 +362,33 @@ const HomeScreen = () => {
             { key: 'Nữ', value: 'Nữ' }
           ]}
           setSelected={setGender}
-
         />
-        {/* <TextInput style={{
-          borderWidth: 1,
-          padding: 10,
-          marginRight: 10,
-          borderRadius: 10,
-          marginTop: 20
-
-        }} value={gender} placeholder='Gender' onChangeText={(gender) => {
-          setGender(gender);
-        }}></TextInput>
-        <Text style={styles.errorTxt}>{genderError}</Text> */}
+        <Text style={styles.errorTxt}>{genderError}</Text>
 
         <TextInput style={{
           borderWidth: 1,
           padding: 10,
           marginRight: 10,
           borderRadius: 10,
-          marginTop: 20,
           marginBottom: 10
 
-        }} value={birthDay} placeholder='Birthday' onChangeText={(birthDay) => {
-          setBirthDay(birthDay);
-        }}></TextInput>
+        }} onFocus={() => { setOpen(true) }} value={birthDay} placeholder='Birthday' ></TextInput>
+
+        {open && (<RNDateTimePicker
+          mode='date'
+          display='calendar'
+          value={new Date()}
+          maximumDate={new Date(2023, 10, 20)}
+          minimumDate={new Date(1900, 0, 1)}
+          onChange={onChange}
+
+        />)}
+
         <Text style={styles.errorTxt}>{birthDayError}</Text>
 
 
         <CustomButton onPress={() => {
-          handUpdate(authInfo.id)
+          handInsert()
         }} title={'save'} />
       </View>
     )
@@ -301,9 +398,7 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        {authInfo?.role === 'ADMIN' ? renderStudents() : formStaffs(authInfo)}
-      </View>
+      {authInfo?.role === 'ADMIN' ? renderStudents() : formStaffs(authInfo)}
     </SafeAreaView>
   )
 }
@@ -312,7 +407,9 @@ export default HomeScreen
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#e1e1e1'
+    backgroundColor: 'white',
+    flex: 1,
+    justifyContent: 'center',
   },
 
   listContainer: {
@@ -333,8 +430,21 @@ const styles = StyleSheet.create({
 
   errorTxt: {
     color: 'red',
-    marginVertical: 10
-  }
+  },
+  imageContainer: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderWidth: 1,
+    borderColor: "gray",
+    marginBottom: 16,
+  },
+
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+  },
 
 
 

@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from './screens/HomeScreen';
 import SignInScreen from './screens/SignInScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Test from './screens/Test';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,9 @@ const App = () => {
 
 
         <Stack.Screen name='Login' component={SignInScreen}
+          options={{ headerTitleAlign: 'center', gestureEnabled: false }} />
+
+        <Stack.Screen name='Test' component={Test}
           options={{ headerTitleAlign: 'center', gestureEnabled: false }} />
 
       </Stack.Navigator>

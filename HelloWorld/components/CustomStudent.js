@@ -1,9 +1,12 @@
-import { Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { FontAwesome5, AntDesign } from '@expo/vector-icons';
 import Dialog from "react-native-dialog";
 import CustomInput from './CustomInput';
 import { SelectList } from 'react-native-dropdown-select-list';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+import * as ImagePicker from 'expo-image-picker';
+
 
 const CustomStudent = (
     {
@@ -12,9 +15,12 @@ const CustomStudent = (
         onRefresh
     }) => {
 
+    const [open, setOpen] = useState(false)
 
     const [visible, setVisible] = useState(false);
-    
+
+    const [newAvatar, setNewAvatar] = useState('');
+    const [avatar, setAvatar] = useState(student.avatar);
     const [studentName, setStudentName] = useState(student.studentName);
     const [studentID, setStudentID] = useState(student.studentID);
     const [email, setEmail] = useState(student.email);
@@ -22,16 +28,48 @@ const CustomStudent = (
     const [birthDay, setBirthDay] = useState(student.birthDay);
 
     const updateStudent = (id) => {
-        fetch('http://172.20.10.2:3000/students/' + id, {
+        fetch('http://192.168.2.104:3000/students/' + id, {
             method: 'PATCH',
-            body: JSON.stringify({ studentID: studentID, studentName: studentName, email: email, gender: gender, birthDay: birthDay }),
+            body: JSON.stringify({ avatar: newAvatar, studentID: studentID, studentName: studentName, email: email, gender: gender, birthDay: birthDay }),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
             },
+
         })
             .then((response) => response.json())
             .then((json) => console.log(json));
+        onRefresh(() => { onRefresh() });
+
     }
+
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate;
+        setOpen(false)
+
+        let tempDate = new Date(currentDate);
+        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+        setBirthDay(fDate);
+
+    }
+
+    const handleSelectImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+            alert("Permission to access the media library is required!");
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setNewAvatar(result.assets[0].uri);
+        }
+    };
 
     return (
         <View>
@@ -39,11 +77,17 @@ const CustomStudent = (
                 <TouchableOpacity style={{ flex: 10 }} onPress={() => { setVisible(!visible) }} >
                     <View style={styles.imageAndInfo}>
                         <View >
-                            {student.gender === 'Nam' ? (
-                                <Image style={styles.icon} source={require('../assets/images//male.png')} resizeMode='contain' />
-                            ) : (
-                                <Image style={styles.icon} source={require('../assets/images/female.png')} resizeMode='contain' />
-                            )}
+                            {
+                                student.avatar === '' ? (
+                                    student.gender === 'Nam' ? (
+                                        <Image style={styles.icon} source={require('../assets/images//male.png')} resizeMode='contain' />
+                                    ) : (
+                                        <Image style={styles.icon} source={require('../assets/images/female.png')} resizeMode='contain' />
+                                    )
+                                ) : (
+                                    <Image style={styles.icon} source={{ uri: avatar }} resizeMode='contain' />
+                                )
+                            }
                         </View>
                         <View style={{ justifyContent: 'center' }}>
                             <Text>{"Mã sinh viên: " + student.studentID}</Text>
@@ -66,11 +110,34 @@ const CustomStudent = (
                         fontSize: 24,
                         textAlign: 'center',
                         fontWeight: 'bold'
-                    }}>Sửa lớp</Dialog.Title>
+                    }}>Sửa</Dialog.Title>
                     <Dialog.Title style={{
                         textAlign: 'center',
                     }}>________________________</Dialog.Title>
                     <View>
+                        <View style={{ alignItems: 'center' }}>
+                            <TouchableOpacity style={styles.imageContainer} onPress={handleSelectImage}>
+
+                                {
+                                    avatar === '' ? (
+                                        student.gender === 'Nam' ? (
+                                            <Image style={styles.icon} source={require('../assets/images//male.png')} resizeMode='contain' />
+                                        ) : (
+                                            <Image style={styles.icon} source={require('../assets/images/female.png')} resizeMode='contain' />
+                                        )
+                                    ) : (
+                                        newAvatar === '' ? (
+                                            <Image source={{ uri: avatar }} style={styles.image} />
+
+                                        ) : (
+                                            <Image source={{ uri: newAvatar }} style={styles.image} />
+
+                                        )
+                                    )
+                                }
+
+                            </TouchableOpacity>
+                        </View>
                         <Text>Mã sinh viên</Text>
                         <CustomInput placeholder={'Mã sinh viên'} value={studentID} setValue={setStudentID} />
                         <Text>Tên sinh viên</Text>
@@ -93,7 +160,22 @@ const CustomStudent = (
                             defaultOption={gender}
                         />
                         <Text>Ngày sinh</Text>
-                        <CustomInput placeholder={'Ngày sinh'} value={birthDay} setValue={setBirthDay} />
+                        <TextInput style={{
+                            borderRadius: 10,
+                            borderWidth: 4,
+                            borderColor: '#a7a7d7',
+                            padding: 10,
+                            backgroundColor: 'white',
+                        }} value={birthDay} onFocus={() => { setOpen(true) }} />
+                        {open && (<RNDateTimePicker
+                            mode='date'
+                            display='calendar'
+                            value={new Date()}
+                            maximumDate={new Date(2023, 10, 20)}
+                            minimumDate={new Date(1900, 0, 1)}
+                            onChange={onChange}
+
+                        />)}
 
 
                     </View>
@@ -110,11 +192,11 @@ const CustomStudent = (
                             onPress={() => {
                                 try {
                                     updateStudent(student.id);
-                                    onRefresh(()=>{onRefresh()});
                                     setVisible(!visible);
-                                    ToastAndroid.show("Sửa thành công!",ToastAndroid.SHORT)
+                                    setAvatar(newAvatar);
+                                    ToastAndroid.show("Sửa thành công!", ToastAndroid.SHORT)
                                 } catch (error) {
-                                    ToastAndroid.show("Sửa không thành công!" + error,ToastAndroid.SHORT)
+                                    ToastAndroid.show("Sửa không thành công!" + error, ToastAndroid.SHORT)
                                 }
                             }}
 
@@ -161,8 +243,22 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     imageAndInfo: {
-        flex:10,
+        flex: 10,
         flexDirection: 'row',
 
-    }
+    },
+    imageContainer: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        borderWidth: 1,
+        borderColor: "gray",
+        marginBottom: 16,
+    },
+
+    image: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+    },
 })
