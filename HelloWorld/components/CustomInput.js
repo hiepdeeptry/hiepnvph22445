@@ -2,15 +2,16 @@ import { Image, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, Vie
 import React, { useState } from 'react'
 
 const CustomInput = (
-        {    placeholder,
-            secureTextEntry,
-            value, 
-            setValue 
-        }) => {
+    { placeholder,
+        secureTextEntry,
+        value,
+        setValue
+    }) => {
 
     return (
         <View>
             <TextInput
+                clearTextOnFocus={true}
                 placeholder={placeholder}
                 secureTextEntry={secureTextEntry}
                 style={styles.input}

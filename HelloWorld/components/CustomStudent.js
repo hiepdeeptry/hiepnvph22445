@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { FontAwesome5, AntDesign } from '@expo/vector-icons';
 import Dialog from "react-native-dialog";
@@ -19,8 +19,9 @@ const CustomStudent = (
 
     const [visible, setVisible] = useState(false);
 
-    const [newAvatar, setNewAvatar] = useState('');
     const [avatar, setAvatar] = useState(student.avatar);
+    const [newAvatar, setNewAvatar] = useState(avatar);
+
     const [studentName, setStudentName] = useState(student.studentName);
     const [studentID, setStudentID] = useState(student.studentID);
     const [email, setEmail] = useState(student.email);
@@ -71,6 +72,26 @@ const CustomStudent = (
         }
     };
 
+    const confirmDeleteStudent = () => {
+        Alert.alert(
+            'Delete!',
+            'Xóa sinh viên?',
+            [
+                {
+                    text: 'Yes',
+                    onPress: () => onDelete(student),
+                    style: 'default',
+                },
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+
+            ],
+            { cancelable: false }
+        );
+    };
+
     return (
         <View>
             <View style={styles.itemList}>
@@ -92,14 +113,14 @@ const CustomStudent = (
                         <View style={{ justifyContent: 'center' }}>
                             <Text>{"Mã sinh viên: " + student.studentID}</Text>
                             <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{student.studentName} </Text>
-                            <Text>{student.gender} </Text>
+                            <Text>Giới tính: {student.gender} </Text>
                             <Text>{student.email} </Text>
                             <Text>{student.birthDay} </Text>
 
                         </View>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(student)}>
+                <TouchableOpacity style={styles.deleteButton} onPress={confirmDeleteStudent}>
                     <FontAwesome5 name='trash-alt' size={25} color='red' />
                 </TouchableOpacity>
 
@@ -119,20 +140,14 @@ const CustomStudent = (
                             <TouchableOpacity style={styles.imageContainer} onPress={handleSelectImage}>
 
                                 {
-                                    avatar === '' ? (
+                                    newAvatar === '' ? (
                                         student.gender === 'Nam' ? (
                                             <Image style={styles.icon} source={require('../assets/images//male.png')} resizeMode='contain' />
                                         ) : (
                                             <Image style={styles.icon} source={require('../assets/images/female.png')} resizeMode='contain' />
                                         )
                                     ) : (
-                                        newAvatar === '' ? (
-                                            <Image source={{ uri: avatar }} style={styles.image} />
-
-                                        ) : (
-                                            <Image source={{ uri: newAvatar }} style={styles.image} />
-
-                                        )
+                                        <Image source={{ uri: newAvatar }} style={styles.image} />
                                     )
                                 }
 
@@ -146,11 +161,18 @@ const CustomStudent = (
                         <CustomInput placeholder={'Email'} value={email} setValue={setEmail} />
                         <Text>Giới tính</Text>
                         <SelectList
+                            boxStyles={{
+                                borderRadius: 10,
+                                borderWidth: 4,
+                                borderColor: '#a7a7d7',
+                            }}
                             dropdownStyles={{
                                 padding: 10,
-                                marginRight: 10,
                                 borderRadius: 10,
-                                marginTop: 20
+                                marginTop: 20,
+                                borderRadius: 10,
+                                borderWidth: 4,
+                                borderColor: '#a7a7d7',
                             }}
                             data={[
                                 { key: 'Nam', value: 'Nam' },

@@ -389,6 +389,7 @@ const HomeScreen = () => {
 
         <CustomButton onPress={() => {
           handInsert()
+          getStudents();
         }} title={'save'} />
       </View>
     )
